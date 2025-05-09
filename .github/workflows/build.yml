@@ -24,6 +24,37 @@ jobs:
       - name: Test
         run: ./ocr-x86_64-apple-darwin $(pwd)/test.jpg auto
 
+      - name: CodeSign
+        if: matrix.os == 'macos-latest'
+        run: |
+          # 设置证书
+          echo "${{ secrets.APPLE_CERTIFICATE }}" | base64 --decode > cert.p12
+          security create-keychain -p github-actions github-actions.keychain
+          security default-keychain -s github-actions.keychain
+          security unlock-keychain -p github-actions github-actions.keychain
+          security import cert.p12 -k github-actions.keychain -P "${{ secrets.APPLE_CERTIFICATE_PASSWORD }}" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k github-actions github-actions.keychain
+
+          codesign --force \
+            -s "${{ secrets.APPLE_SIGNING_IDENTITY }}" \
+            --keychain github-actions.keychain \
+            --options runtime \
+            --timestamp \
+            --identifier "ocr-x86_64-apple-darwin" \
+            ./ocr-x86_64-apple-darwin
+
+          codesign --force \
+            -s "${{ secrets.APPLE_SIGNING_IDENTITY }}" \
+            --keychain github-actions.keychain \
+            --options runtime \
+            --timestamp \
+            --identifier "ocr-aarch64-apple-darwin" \
+            ./ocr-aarch64-apple-darwin
+
+          # 验证签名
+          codesign -dvv ./ocr-aarch64-apple-darwin
+          codesign -d --entitlements :- ./ocr-aarch64-apple-darwin
+
       - name: Upload Binary
         uses: actions/upload-artifact@v3
         with:
