@@ -39,7 +39,6 @@ jobs:
             --keychain github-actions.keychain \
             --options runtime \
             --timestamp \
-            --identifier "ocr-x86_64-apple-darwin" \
             ./ocr-x86_64-apple-darwin
 
           codesign --force \
@@ -47,7 +46,6 @@ jobs:
             --keychain github-actions.keychain \
             --options runtime \
             --timestamp \
-            --identifier "ocr-aarch64-apple-darwin" \
             ./ocr-aarch64-apple-darwin
 
           # 验证签名
