@@ -8,7 +8,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
@@ -56,13 +56,13 @@ jobs:
           codesign -d --entitlements :- ./ocr-aarch64-apple-darwin
 
       - name: Upload Binary
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ocr-x86_64-apple-darwin
           path: ./ocr-x86_64-apple-darwin
 
       - name: Upload Binary
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ocr-aarch64-apple-darwin
           path: ./ocr-aarch64-apple-darwin
