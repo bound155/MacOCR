@@ -33,6 +33,11 @@ jobs:
           security unlock-keychain -p github-actions github-actions.keychain
           security import cert.p12 -k github-actions.keychain -P "${{ secrets.APPLE_CERTIFICATE_PASSWORD }}" -T /usr/bin/codesign
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k github-actions github-actions.keychain
+          # 列出所有可用的签名身份
+          security find-identity -v -p codesigning github-actions.keychain
+          
+          # 检查特定证书信息
+          security find-certificate -a -c "${{ secrets.APPLE_SIGNING_IDENTITY }}" github-actions.keychain
 
           codesign --force \
             -s "${{ secrets.APPLE_SIGNING_IDENTITY }}" \
