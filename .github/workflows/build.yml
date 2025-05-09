@@ -25,7 +25,6 @@ jobs:
         run: ./ocr-x86_64-apple-darwin $(pwd)/test.jpg auto
 
       - name: CodeSign
-        if: matrix.os == 'macos-latest'
         run: |
           # 设置证书
           echo "${{ secrets.APPLE_CERTIFICATE }}" | base64 --decode > cert.p12
