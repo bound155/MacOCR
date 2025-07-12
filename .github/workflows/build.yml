@@ -13,7 +13,7 @@ jobs:
           fetch-depth: 1
 
       - name: Install Swift
-        run: |
+        run: |ios
           brew install swift
 
       - name: Build Swift Script
